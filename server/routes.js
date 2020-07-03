@@ -10,9 +10,9 @@ module.exports = function(expressApp) {
 
     routes.forEach(route => {
         const method = route.method ?? 'get';
-        expressApp[method](route.path, (req, res) => {
+        expressApp[method](route.path, async (req, res) => {
             try {
-                res.json(route.handler(req.params, req.body));   
+                res.json(await route.handler(req.params, req.body));   
             } catch (error) {
                 console.error('ERROR', error);
 

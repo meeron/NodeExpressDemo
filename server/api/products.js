@@ -1,30 +1,33 @@
 const exceptions = require('../exceptions');
+const productsService = require('../services/products');
 
-const products = [
-    { id: 1, name: 'Apple' },
-    { id: 2, name: 'Orange' },
-    { id: 3, name: 'Pineapple' },
-];
+function mapProduct(product) {
+    const { _id, ...item } = product;
 
-function listOfProducts() {
-    return products;
+    return { id: _id, ...item };    
 }
 
-function getProduct(params) {
-    return products.find(p => p.id == params.id);
+async function listOfProducts() {
+    const items = await productsService.getAll();
+
+    return items.map(mapProduct);
 }
 
-function addProduct(params, request) {
+async function getProduct(params) {
+    const id = parseInt(params.id);
+    return await productsService.getById(id);
+}
+
+async function addProduct(params, request) {
     if (!request?.name) exceptions.badRequest("'name' is required");
 
     const newProduct = {
-        id: Date.now(),
         name: request.name,
     };
 
-    products.push(newProduct);
+    await productsService.insert(newProduct);
 
-    return newProduct;
+    return mapProduct(newProduct);
 }
 
 function deleteProduct(params) {
