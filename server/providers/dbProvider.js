@@ -28,6 +28,19 @@ class DbProvider {
     return await this._db.collection(collection)
       .findOne({ _id: id});
   }
+
+  async delete(collection, filter) {
+    await this._db.collection(collection)
+      .deleteOne(filter);
+  }
+
+  async update(collection, filter, data) {
+    await this._db.collection(collection)
+      .updateOne(filter, {
+        $set: data,
+        $currentDate: { updatedAtUtc: true },
+      });
+  }
 }
 
 module.exports = new DbProvider();
