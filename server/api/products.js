@@ -1,5 +1,5 @@
-const exceptions = require('../exceptions');
-const productsService = require('../services/products');
+import { badRequest } from '../exceptions.js';
+import productsService from '../services/products.js';
 
 async function listOfProducts() {
     return await productsService.getAll();
@@ -10,7 +10,7 @@ async function getProduct(params) {
 }
 
 async function addProduct(params, request) {
-    if (!request?.name) exceptions.badRequest("'name' is required");
+    if (!request?.name) badRequest("'name' is required");
 
     return await productsService.insert({
         name: request.name,
@@ -22,12 +22,12 @@ async function deleteProduct(params) {
 }
 
 async function updateProduct(params, request) {
-    if (!request?.name) exceptions.badRequest("'name' is required");
+    if (!request?.name) badRequest("'name' is required");
 
     return await productsService.update(params.id, request);
 }
 
-module.exports = function () {
+export default function () {
     return [
         { path: '/products', handler: listOfProducts },
         { path: '/products/:id', handler: getProduct },

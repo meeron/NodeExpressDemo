@@ -1,6 +1,5 @@
-const { Timestamp } = require('mongodb');
-
-const MongoClient = require('mongodb').MongoClient;
+import mongo from 'mongodb';
+const { MongoClient } = mongo;
 
 class DbProvider {
 
@@ -43,4 +42,4 @@ class DbProvider {
   }
 }
 
-module.exports = new DbProvider();
+export default new DbProvider();

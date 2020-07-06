@@ -1,4 +1,5 @@
-const dbProvider = require('../providers/dbProvider');
+import dbProvider from '../providers/dbProvider.js';
+
 const COLLECTION = 'Products';
 
 function mapProduct(product) {
@@ -52,4 +53,4 @@ class ProductsService {
     }
 }
 
-module.exports = new ProductsService();
+export default new ProductsService();

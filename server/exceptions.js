@@ -1,8 +1,6 @@
-module.exports = {
-    badRequest: (message) => {
-        throw {
-            status: 400,
-            message,
-        };
-    }
+export function badRequest(message) {
+  throw {
+    status: 400,
+    message,
+  };
 }

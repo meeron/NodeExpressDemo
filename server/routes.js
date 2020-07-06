@@ -1,10 +1,10 @@
-const products = require('./api/products');
+import products from './api/products.js'; 
 
 const home = [
     { path: '/', handler: () => { return { version: '1.0.0' } } },
 ]
 
-module.exports = function(expressApp) {
+export default function(expressApp) {
     const routes = home
         .concat(products());
 
