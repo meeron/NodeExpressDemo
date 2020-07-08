@@ -8,7 +8,22 @@ class DbProvider {
   }
 
   async init() {
-    const client = await MongoClient.connect('mongodb://localhost');
+    if (!process.env.NodeExpressDemo_Db) {
+      throw "Db connection string is not defined"
+    }
+
+    const options = {
+      // Enables the new unified topology layer
+      useUnifiedTopology: true,
+
+      // Only applies to the unified topology. How long to block for server selection before throwing an error
+      serverSelectionTimeoutMS: 3000,
+    };
+
+    console.log(`Connecting to ${process.env.NodeExpressDemo_Db}...`);
+    const client = await MongoClient.connect(process.env.NodeExpressDemo_Db, options);
+    console.log('Connected.');
+
     this._db = client.db('NodeExpressDemo');
   }
 

@@ -2,8 +2,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dbProvider from './providers/dbProvider.js';
 import routes from './routes.js';
+import customEnv from 'custom-env';
 
-const port = 3000;
+// Read custom environment variables
+customEnv.env(process.env.NODE_ENV ?? 'prod');
+
+const port = process.env.NodeExpressDemo_Port ?? 3000;
 
 const app = express();
 app.use(bodyParser.json());
@@ -11,8 +15,8 @@ app.use(bodyParser.json());
 routes(app);
 
 // mongod --config /usr/local/etc/mongod.conf --fork
-console.log('Connecting to MongoDb...');
 dbProvider.init().then(() => {
-    console.log('Connected.');
     app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
+}).catch(err => {
+    console.error('ERR:', err);
 });
