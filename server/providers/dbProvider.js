@@ -28,7 +28,8 @@ class DbProvider {
   }
 
   async insert(collection, data) {
-    await this._db.collection(collection).insertOne(data);
+    const result = await this._db.collection(collection).insertOne(data);
+    return result.insertedId;
   }
 
   async getAll(collection) {

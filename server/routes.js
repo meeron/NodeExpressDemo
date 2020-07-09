@@ -1,4 +1,5 @@
 import products from './api/products.js'; 
+import apps from './api/apps.js';
 
 const home = [
     { path: '/', handler: () => { return { version: '1.0.0' } } },
@@ -6,7 +7,8 @@ const home = [
 
 export default function(expressApp) {
     const routes = home
-        .concat(products());
+        .concat(products())
+        .concat(apps());
 
     routes.forEach(route => {
         const method = route.method ?? 'get';
