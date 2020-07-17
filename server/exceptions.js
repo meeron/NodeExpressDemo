@@ -4,3 +4,10 @@ export function badRequest(message) {
     message,
   };
 }
+
+export function unauthorized() {
+  throw {
+    status: 401,
+    message: 'Unauthorized',
+  };
+}

@@ -10,6 +10,10 @@ customEnv.env(process.env.NODE_ENV ?? 'prod');
 const port = process.env.NodeExpressDemo_Port ?? 3000;
 
 const app = express();
+app.use((req, res, next) => {
+    //res.status(401).json({});
+    next();
+});
 app.use(bodyParser.json());
 
 routes(app);

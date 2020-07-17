@@ -1,5 +1,7 @@
-import dbProvider from '../providers/dbProvider.js';
 import crypto from 'crypto';
+import dbProvider from '../providers/dbProvider.js';
+import authService from '../services/auth.js';
+
 const { createHash } = crypto;
 
 const COLLECTION = "Apps";
@@ -14,7 +16,7 @@ class AppsService {
 
     await dbProvider.insert(COLLECTION, {
       _id: appKey,
-      secret: createHash('sha256').update(appSecret).digest('hex'),
+      secret: authService.hashSecret(appSecret),
       createdAtUtc: new Date(),
     });
 
