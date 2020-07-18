@@ -2,17 +2,12 @@ import crypto from 'crypto';
 import dbProvider from '../providers/dbProvider.js';
 import authService from '../services/auth.js';
 
-const { createHash } = crypto;
-
 const COLLECTION = "Apps";
 
 class AppsService {
   async create() {
-    const hash = createHash('sha256');
-
-    // Generate app secret
-    const appSecret = hash.update(Date.now().toString()).digest('hex');
-    const appKey = createHash('md5').update(Date.now().toString()).digest('hex');
+    const appSecret = crypto.randomBytes(32).toString('hex');
+    const appKey = crypto.randomBytes(16).toString('hex');
 
     await dbProvider.insert(COLLECTION, {
       _id: appKey,
