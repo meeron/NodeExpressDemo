@@ -1,6 +1,6 @@
 import dbProvider from '../providers/dbProvider.js';
 import crypto from 'crypto';
-const { createHash } = crypto;
+import cryptoProvider from '../providers/cryptoProvider.js';
 
 const COLLECTION = "Apps";
 
@@ -15,13 +15,24 @@ class AuthService {
             return null;
         }
 
+        const payload = {
+            app: appId,
+            expiresAt: Date.now() + 3600000, // In 1h
+        };
+        const payloadJson = JSON.stringify(payload);
+
+        const authKey = Buffer.from(process.env.NodeExpressDemo_AuthKey, 'hex');
+        const iv = crypto.randomBytes(16);
+
+        const encryptedPayload = cryptoProvider.encryptAes192(payloadJson, authKey, iv);
+
         return {
-            token: "sample_token"
+            token: iv.toString('hex') + encryptedPayload,
         };
     }
 
     hashSecret(secret) {
-        return createHash('sha256').update(secret).digest('hex');
+        return crypto.createHash('sha256').update(secret).digest('hex');
     }
 }
 
