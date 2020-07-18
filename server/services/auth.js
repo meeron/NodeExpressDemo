@@ -34,6 +34,21 @@ class AuthService {
     hashSecret(secret) {
         return crypto.createHash('sha256').update(secret).digest('hex');
     }
+
+    decodeToken(token) {
+        try {
+            const authKey = Buffer.from(process.env.NodeExpressDemo_AuthKey, 'hex');
+            const iv = Buffer.from(token.substring(0, 32), 'hex');
+            
+            const encryptedPayload = token.substring(32, token.length);
+            const payloadJson = cryptoProvider.decryptAes192(encryptedPayload, authKey, iv);
+    
+            return JSON.parse(payloadJson);   
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    }
 }
 
 export default new AuthService();

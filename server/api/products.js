@@ -29,10 +29,10 @@ async function updateProduct(params, request) {
 
 export default function () {
     return [
-        { path: '/products', handler: listOfProducts },
-        { path: '/products/:id', handler: getProduct },
-        { path: '/products', method: 'post', handler: addProduct },
-        { path: '/products/:id', method: 'delete', handler: deleteProduct },
-        { path: '/products/:id', method: 'put', handler: updateProduct },
+        { path: '/products', handler: listOfProducts, useAuth: true },
+        { path: '/products/:id', handler: getProduct, useAuth: true },
+        { path: '/products', method: 'post', handler: addProduct, useAuth: true },
+        { path: '/products/:id', method: 'delete', handler: deleteProduct, useAuth: true },
+        { path: '/products/:id', method: 'put', handler: updateProduct, useAuth: true },
     ];
 }
