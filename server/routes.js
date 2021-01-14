@@ -2,6 +2,7 @@ import products from './api/products.js';
 import apps from './api/apps.js';
 import auth from './api/auth.js';
 import authHandler from './authorization.js';
+import logger from './services/logger.js';
 
 const home = [
     { path: '/', handler: () => { return { version: '1.0.0' } } },
@@ -26,17 +27,36 @@ export default function(expressApp) {
     routes.forEach(route => {
         const method = route.method ?? 'get';
         expressApp[method](route.path, createAuth(route.useAuth), async (req, res) => {
+            const start = Date.now();
+            let end;
+            let responseData;
+            let status = 200;
+            
             try {
-                res.json(await route.handler(req.params, req.body));   
+                responseData = await route.handler(req.params, req.body);
+                end = Date.now();
+                if (!responseData) {
+                    status = 204;
+                }
             } catch (error) {
-                console.error('ERROR', error);
+                end = Date.now();
 
-                const status = error.status ?? 500;
+                status = error.status ?? 500;
                 const message = error.message ?? 'Server error';
+                
+                logger.error(message, { Status: status });
 
-                res.status(status).json({
+                responseData = {
                     message,
-                });
+                };
+            } finally {
+                res.status(status).json(responseData);
+                const duration = end - start;
+                
+                const msg = `${req.method} ${req.path} in ${duration}ms. Status: ${status}`;
+                const meta = { Path: req.path, Duration: duration, Status: status };
+                
+                logger.debug(msg, meta);
             }
         });
     });
